@@ -1,9 +1,9 @@
 class List
   attr_reader(:name, :id)
 
-  define_method(:initialize) do |attributes|
-    @name = attributes.fetch(:name)
-    @id = attributes.fetch(:id)
+  def initialize(attributes)
+    @name = attributes[:name]
+    @id = attributes[:id]
   end
 
   define_singleton_method(:all) do
@@ -17,12 +17,12 @@ class List
     lists
   end
 
-  define_method(:save) do
+  def save
     result = DB.exec("INSERT INTO lists (name) VALUES ('#{@name}') RETURNING id;")
     @id = result.first().fetch("id").to_i()
   end
 
-  define_method(:==) do |another_list|
+  def ==(another_list)
     self.name().==(another_list.name()).&(self.id().==(another_list.id()))
   end
 end
